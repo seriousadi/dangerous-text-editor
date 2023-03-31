@@ -1,4 +1,4 @@
-from tkinter import Tk, Text
+from tkinter import Tk, Text, Label
 from threading import Thread
 import time
 from unittest.mock import Mock
@@ -7,7 +7,7 @@ start = 0
 end = 0
 screen = Tk()
 game_on = True
-
+screen.title("Dangerous Text Editor")
 
 def checker():
     global game_on
@@ -15,8 +15,11 @@ def checker():
         global start
         time.sleep(1)
 
-        if start < 5:
-            print(start)
+        if start < 6:
+            if start > 0 :
+                label.config(text=f'Tick-Tick : {start}', background="pink")
+            else:
+                label.config(text="You fine for now", background="green")
             if mock.called:
                 start = 0
             else:
@@ -36,11 +39,20 @@ def key_pressed(d):
     end = d
 
 
+# Mock to check if the function is called or not
 mock = Mock(side_effect=key_pressed)
-text_area = Text()
-text_area.grid()
+
+# label
+label = Label(screen,text="You fine for now", background="green")
+label.pack()
+
+# Text area
+text_area = Text(screen)
+text_area.pack()
 text_area.bind('<KeyPress>', key_pressed)
 text_area.bind('<KeyRelease>', key_released)
+
+# threading the checker function so that we can count how many seconds the typer is not typing
 thread = Thread(target=checker)
 thread.start()
 
